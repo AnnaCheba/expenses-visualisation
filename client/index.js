@@ -4,9 +4,11 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 
+import Upload from './Components/UploadTable';
+
 const app = (
     <Provider store={store}>
-        <div>hello I am EVA</div>
+        <Upload />
     </Provider>
 );
 
