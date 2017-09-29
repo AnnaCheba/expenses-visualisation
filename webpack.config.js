@@ -2,6 +2,7 @@ require('babel-core/register');
 
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -14,8 +15,9 @@ const resolve = {
 const entries = [];
 
 if (isDev) {
-    entries.push('webpack-dev-server/client?http://localhost:8080');
-    entries.push('webpack/hot/only-dev-server');
+    // entries.push('webpack-dev-server/client?http://localhost:8080');
+    entries.push('webpack-hot-middleware/client?reload=true');
+    // entries.push('webpack/hot/only-dev-server');
 }
 
 entries.push('./client/index.js');
@@ -26,7 +28,12 @@ const plugins = [
         'process.env': {
             'NODE_ENV': isDev ? JSON.stringify('development') : JSON.stringify('production')
         }
-  })
+    }),
+    new HtmlWebpackPlugin({
+        template: 'client/index.html',
+        inject: 'body',
+        filename: 'index.html'
+    }),
 ];
 
 if (isDev) {
@@ -45,7 +52,7 @@ module.exports = {
     entry: entries,
     // devtool: isDev ? 'cheap-module-eval-source-map' : null,
     output: {
-        path: path.join(__dirname, 'build'),
+        path: path.join(__dirname, '/dist/'),
         filename: '[name].js',
         sourceMapFileName: '[name].map',
         publicPath: '/', // Used in webpack-dev-server as the directory for bundle.js
