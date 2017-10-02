@@ -4,6 +4,8 @@ const express = require('express');
 const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
+const fileUpload = require('express-fileupload');
+const uuidv4 = require('uuid/v4');
 const config = require('./webpack.config.js');
 const parseUploadedFile = require('./server/file-parser');
 const getItems = require('./server/get-iems');
@@ -40,10 +42,35 @@ if (isDeveloping) {
     });
 }
 
-app.get('/rest/upload', (req, res) => {
-    console.log('/rest/upload');
-    parseUploadedFile(path.join(__dirname, 'tmp', '1.csv')).then((fieldId) => {
-        res.send(JSON.stringify({ success: true, fieldId }));
+app.use(fileUpload());
+
+// app.get('*', (req, res) => {
+//     console.log('req', req);
+// });
+
+app.post('/rest/expenses/upload', (req, res) => {
+    if (!req.files) {
+        res.status(400).send(JSON.stringify({
+            success: false,
+            error: 'File was not uploaded',
+        }));
+
+        return;
+    }
+
+    const filePath = path.join(__dirname, 'tmp', `${uuidv4()}.csv`);
+
+    req.files.file.mv(filePath, (err) => {
+        if (err) {
+            console.log('err', err);
+            return;
+        }
+
+        console.log('file', req.files.file);
+
+        parseUploadedFile(filePath).then((fileId) => {
+            res.send(JSON.stringify({ success: true, fileId }));
+        });
     });
 });
 
