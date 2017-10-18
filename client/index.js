@@ -1,34 +1,31 @@
-import React from 'react';
+import React, { Component } from 'react';
 import 'rxjs';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+import PropTypes from 'prop-types';
+import StockList from './Components/StockList';
 
-import Upload from './Components/UploadTable';
-import ListItem from './Components/ListItem';
-import PieChart from 'react-simple-pie-chart';
+// import { Provider } from 'react-redux';
+// import store from './store';
 
-const app = (
-    <Provider store={store}>
-        <div>
-            <Upload />
-            <ul>
-                <ListItem />
-            </ul>
-            <PieChart
-                slices={[
-                    {
-                        color: '#f00',
-                        value: 10,
-                    },
-                    {
-                        color: '#0f0',
-                        value: 20,
-                    },
-                ]}
-            />
-        </div>
-    </Provider>
-);
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
 
-render(app, document.getElementById('eva'));
+        };
+    }
+
+    render() {
+        return (
+            <div>
+                <StockList items={this.state.items} />
+            </div>
+        );
+    }
+}
+
+StockList.propTypes = {
+    items: PropTypes.array,
+};
+
+render(<App />, document.getElementById('root'));

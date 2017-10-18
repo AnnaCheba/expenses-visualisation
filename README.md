@@ -1,2 +1,3 @@
-# expenses-visualisation
-App to visualise everyday expenses. 
+# Shares Manager
+App to manage Shares
+
